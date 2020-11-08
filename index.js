@@ -6,15 +6,15 @@ const cors = require("cors")
 const app = express()
 const Pnumber = require("./models/phonenumber")
 const { response } = require("express")
-const { update } = require("./models/phonenumber")
+//const { update } = require("./models/phonenumber")
 
 const errorHandler = (error, request, response, next) => {
 	console.error(error.message)
 
-	if (error.name == "CastError") {
-		return response.status(400).send({error: "malformatted id"})
-	} else if(error.name == "ValidationError") {
-		return response.status(400).send({error: error.message})
+	if (error.name === "CastError") {
+		return response.status(400).send({ error: "malformatted id" })
+	} else if(error.name === "ValidationError") {
+		return response.status(400).send({ error: error.message })
 	}
 	next(error)
 }
@@ -22,6 +22,7 @@ const errorHandler = (error, request, response, next) => {
 app.use(express.json())
 app.use(express.static("build"))
 
+// eslint-disable-next-line no-unused-vars
 morgan.token("body", (req, res) => {
 	return JSON.stringify(req.body)
 })
@@ -29,11 +30,11 @@ morgan.token("body", (req, res) => {
 app.use(morgan(":method :url :status :res[content-length] - :response-time :body"))
 app.use(cors())
 
-app.get("/", (request, response) => {
+app.get("/", (_request, response) => {
 	response.send("<h1>You should not be here</h1>")
 })
 
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", (_request, response) => {
 	Pnumber.find({}).then(numbers => {
 		response.json(numbers)
 	})
@@ -58,6 +59,7 @@ app.get("/api/persons/:id", (req, res, next) => {
 
 app.delete("/api/persons/:id", (req, res, next) => {
 	Pnumber.findByIdAndRemove(req.params.id)
+		// eslint-disable-next-line no-unused-vars
 		.then(result => {
 			res.status(204).end()
 		})
@@ -68,7 +70,7 @@ app.post("/api/persons/", (req, res, next) => {
 	const body = req.body
 
 	if(!body.name || !body.number) {
-		return res.status(400).json({error: "name or number missing"})
+		return res.status(400).json({ error: "name or number missing" })
 	}
 
 	const number = new Pnumber({
@@ -76,11 +78,12 @@ app.post("/api/persons/", (req, res, next) => {
 		number: body.number
 	})
 
-	number.save().then(savedNumber => {
-		res.json(savedNumber)
+	number.save()
+		.then(savedNumber => {
+			res.json(savedNumber)
 		// console.log(savedNumber)
-	})
-	.catch(error => next(error))
+		})
+		.catch(error => next(error))
 })
 
 app.put("/api/persons/:id", (req, res, next) => {

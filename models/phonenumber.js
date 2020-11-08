@@ -4,6 +4,7 @@ const url = process.env.MONGODB_URI
 
 console.log(`Connecting to ${url}`)
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+	// eslint-disable-next-line no-unused-vars
 	.then(result => {
 		console.log("Connected to MongoDB")
 	})
@@ -12,8 +13,8 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 	})
 
 const numberSchema = new mongoose.Schema({
-	name: {type: String, required: true, minlength: 3, unique: true}, 
-	number: {type: String, required: true, minlength: 8}
+	name: { type: String, required: true, minlength: 3, unique: true },
+	number: { type: String, required: true, minlength: 8 }
 })
 
 numberSchema.set("toJSON", {
